@@ -1,17 +1,19 @@
-# Import the required libraries
-import ollama 
+from google import genai
+from dotenv import load_dotenv
+import os
 
-MODEL = "llama3.2"
 
-message = "What hardware specs do you need to run well"
+# Load the Gemini API Key
+load_dotenv(override=True)
+api_key = os.getenv('GEMINI_API_KEY')
 
-stream = ollama.chat(
-  model= MODEL,
-  messages=[{'role': 'user', 'content': message}],
-  stream=True
+# Create a client
+client = genai.Client(api_key=api_key)
+
+# Test Query
+response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents="Whats the capital of Turkey",
 )
 
-for chunk in stream:
-  print(chunk['message']['content'], end='', flush=True)
-
-
+print(response.text)
